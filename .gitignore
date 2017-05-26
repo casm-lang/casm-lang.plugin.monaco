@@ -1,0 +1,6 @@
+/.attic
+/node_modules
+/obj
+/npm-debug.log
+*#
+*~

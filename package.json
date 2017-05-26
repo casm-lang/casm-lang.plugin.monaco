@@ -1,0 +1,41 @@
+{ "name":          "casm-lang.plugin.monaco"
+  , "version":     "0.0.1"
+  , "description": "CASM Language Server Protocol Client for Monaco Editor"
+  , "author":      "CASM Organisation (https://casm-lang.org)"
+  , "license":     "GPL-3.0+"
+  , "repository":
+    { "type":      "git"
+    , "url":       "https://github.com/casm-lang/casm-lang.plugin.monaco.git"
+    }
+  , "bugs":
+    { "url":       "https://github.com/casm-lang/casm"
+    }
+  , "main":        "./obj/monaco.js"
+  , "typings":     "./obj/monaco"
+  , "devDependencies":
+    { "@types/node":                 "^7.0.12"
+    , "@types/ws":                   "0.0.39"
+    , "copy-webpack-plugin":         "^4.0.1"
+    , "webpack-uglify-js-plugin":    "^1.1.9"
+    , "rimraf":                      "^2.6.1"
+    , "typescript":                  "^2.2.2"
+    , "webpack":                     "^2.3.3"
+    }
+  , "dependencies":
+    { "monaco-languageclient":       "0.0.1-alpha.6"
+    , "reconnecting-websocket":      "^3.0.3"
+    , "request-light":               "^0.2.0"
+    , "vscode-json-languageservice": "^2.0.7"
+    , "vscode-languageserver":       "^3.2.0"
+    , "vscode-uri":                  "^1.0.0"
+    , "vscode-ws-jsonrpc":           "^0.0.1-alpha.3"
+    , "ws":                          "^2.2.3"
+    }
+  , "scripts":
+    { "install":   "npm install"
+    , "compile":   "./node_modules/.bin/tsc"
+    , "build":     "npm run compile && ./node_modules/.bin/webpack"
+    , "clean":     "./node_modules/.bin/rimraf ./obj"
+    , "clean-all": "npm run clean && ./node_modules/.bin/rimraf ./node_modules"
+    }
+}

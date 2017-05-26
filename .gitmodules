@@ -1,0 +1,3 @@
+[submodule "lib/casmd"]
+	path = lib/casmd
+	url = git@github.com:casm-lang/casmd
