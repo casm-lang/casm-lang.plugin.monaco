@@ -47,3 +47,9 @@ clean:
 
 clean-all:
 	$(NPM) $@
+
+server:
+	$(NPM) $@
+
+standalone:
+	$(NPM) $@
