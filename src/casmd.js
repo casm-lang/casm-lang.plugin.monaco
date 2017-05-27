@@ -29,15 +29,60 @@
 //  Licensed under the MIT License. See License.txt in the project root for license information.
 //
 
-const wssPort = 8010
-const localhost = '127.0.0.1'
-
 var WebSocket = require('ws').Server;
 var UdpSocket = require('dgram');
 var UdpBuffer = require('buffer').Buffer;
-
 var Process = require('child_process').spawn;
- 
+var Express = require( 'express' );
+
+var Args = require('command-line-args')
+
+const argsDefinition =
+[ { name:         'standalone'
+  , alias:        'S'
+  , type:         Boolean
+  , defaultValue: false
+  }
+, { name:         'standalone-port'
+  , alias:        's'
+  , type:         Number
+  , defaultValue: 8080
+  }
+, { name:         'websocket-port'
+  , alias:        'w'
+  , type:         Number
+  , defaultValue: 8010
+  }
+];
+
+var options = null;
+
+try
+{
+    args = Args( argsDefinition );
+}
+catch( e )
+{
+    console.error( "casmd.js: " + e.message );
+    process.exit();
+}
+
+// console.log( args );
+
+const wssPort = args['websocket-port'];
+const localhost = '127.0.0.1';
+
+if( args.standalone )
+{
+    const httpPort = args[ 'standalone-port' ];
+
+    var httpServer = Express();
+    httpServer.use( '/', Express.static( __dirname + '/http' ) );
+    httpServer.use( '/public', Express.static( __dirname + '/../obj' ) );
+    httpServer.listen( httpPort );
+    console.log( 'casmd.js: serving content on http://localhost:' + httpPort );
+}
+
 function LanguageServer( port )
 {
     this.name = 'casmd';
@@ -166,19 +211,20 @@ webSock.on
 
       udpInfo.on
       ( 'listening', function()
-	{
-	    var udpPort = udpInfo.address().port;
-	    var udpHost = localhost;
-	    udpInfo.close
-	    ( function()
-	      {
-		  setupConnection( webSock, udpSock, udpPort, udpHost );
-	      }
-	    );
-	}
+	    {
+	        var udpPort = udpInfo.address().port;
+	        var udpHost = localhost;
+	        udpInfo.close
+	        ( function()
+	          {
+		          setupConnection( webSock, udpSock, udpPort, udpHost );
+	          }
+	        );
+	    }
       );
   }
 );
+
 
 //
 //  Local variables:

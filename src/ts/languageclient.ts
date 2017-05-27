@@ -76,10 +76,20 @@ w.editor = monaco.editor.create
   }
 );
 
-
 function createUrl( path: string ): string
 {
     const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+
+    var casmd = w.casmd;
+    if( typeof casmd !== 'undefined' && casmd !== null )
+    {
+        var flag = casmd.standalone;
+        if( typeof flag !== 'undefined' && flag !== null && flag == true )
+        {
+            return `${protocol}://127.0.0.1:8010`;
+        }
+    }
+
     return `${protocol}://${location.host}${path}`;
 }
 
@@ -106,7 +116,7 @@ const url = createUrl( '/casmd' );
 
 const webSocket = createWebSocket( url );
 
-w.casmd = false;
+// flag = false;
 
 listen
 ( { webSocket
@@ -116,11 +126,11 @@ listen
         const disposable = languageClient.start();
         connection.onClose( () =>
         {
-	        w.casmd = false;
+	        // flag = false;
 	        disposable.dispose();
 	    });
 
-	    w.casmd = true;
+	    // flag = true;
 
 	    // w.editor.addAction
 	    // ( { id: 'casmd-version'
@@ -131,7 +141,7 @@ listen
 	    //     , contextMenuOrder: 1.5
 	    //     , run: () => {
 	    // 	console.log("CASMd");
-	    // 	if( w.casmd )
+	    // 	if( flag )
 	    // 	{
 	    // 	    webSocket.send( "CASMd" );
 	    // 	}

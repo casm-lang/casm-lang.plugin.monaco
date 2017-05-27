@@ -28,8 +28,8 @@
 <!--Copyright (c) Microsoft Corporation. All rights reserved.
 <!--Licensed under the MIT License. See License.txt in the project root for license information.
 <!--
--->
 
+-->
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
@@ -39,9 +39,17 @@
   <body>
     <h3>casm-lang.plugin.monaco</h3>
     <div id="container" style="height:480px;width:640px;border:1px solid grey">
-      <script  src="../../obj/min/vs/loader.js"></script>
-      <script> require.config( { paths: { 'vs': '../../obj/min/vs' } } ); </script>
-      <script  src="../../obj/casm-lang.plugin.monaco.min.js"></script>
+      <script src="public/min/vs/loader.js"></script>
+      <script>
+	require.config
+	( { paths:
+	    { 'vs': 'public/min/vs'
+	    }
+	  }
+	);
+	window.casmd = { standalone: true };
+      </script>
+      <script src="public/casm-lang.plugin.monaco.min.js"></script>
     </div>
   </body>
 </html>

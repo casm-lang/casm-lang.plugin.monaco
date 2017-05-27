@@ -34,7 +34,7 @@ NPM = npm run
 default: install compile build
 
 install:
-	$(NPM) $@
+	npm $@
 
 compile:
 	$(NPM) $@
