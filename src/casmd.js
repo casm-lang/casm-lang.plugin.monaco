@@ -33,7 +33,6 @@ var WebSocket = require('ws').Server;
 var UdpSocket = require('dgram');
 var UdpBuffer = require('buffer').Buffer;
 var Process = require('child_process').spawn;
-var Express = require( 'express' );
 
 var Args = require('command-line-args')
 
@@ -74,6 +73,8 @@ const localhost = '127.0.0.1';
 
 if( args.standalone )
 {
+    var Express = require( 'express' );
+
     const httpPort = args[ 'standalone-port' ];
 
     var httpServer = Express();
