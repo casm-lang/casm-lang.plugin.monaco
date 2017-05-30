@@ -44,37 +44,86 @@ import
 }
 from 'monaco-languageclient';
 
+import IMonarchLanguage = monaco.languages.IMonarchLanguage;
+
 const ReconnectingWebSocket = require( 'reconnecting-websocket' );
 
-const value = `CASM
+const value = `
+// Hello World Example Specification
+CASM
 
-init hello_world
+init hello_world /* single execution agent definition  */
 
-rule hello_word =
+function f : Integer -> Integer
+
+/**
+    docu for this hello world rule ;-)
+*/
+rule hello_world =
 {
-    println( "Hello world!" )
+    println( "Hello world!" ) // 'println' is a built-in!
+
+    let x = true in
+        assert( x )
+
+    forall i in [-10..10] do
+        f(i) := i * i
+
+    program( self ) := undef
 }
+
 `;
 
 monaco.languages.register
 ( { id: 'casm'
   , extensions: [ '.casm' ]
   , aliases: [ 'CASM', 'casm' ]
-  , mimetypes: [ 'text/plain'],
+  , mimetypes: [ 'text/plain' ]
   }
 );
 
 var w = <any>window;
-w.editor = monaco.editor.create
-( document.getElementById( "container" )!
-, {
-    model: monaco.editor.createModel
-    ( value
-    , 'casm'
-    , monaco.Uri.parse( 'inmemory://model.casm' )
-    )
+
+w.model = monaco.editor.createModel
+( value
+, 'casm'
+, monaco.Uri.parse( 'inmemory://model.casm' )
+);
+
+// https://microsoft.github.io/monaco-editor/monarch.html#htmlembed
+
+monaco.editor.defineTheme
+( 'casm'
+  , { base: 'vs'
+      , inherit: true
+      , rules:
+      [ { token: 'keyword', foreground: '0033ff', fontStyle: 'bold' }
+      , { token: 'type', foreground: 'aa0000', fontStyle: '' }
+      , { token: 'predefined', foreground: '9900ff', fontStyle: '' }
+      , { token: 'operators', foreground: '000000', fontStyle: 'bold' }
+      , { token: 'constant', foreground: '0099ff', fontStyle: 'bold' }
+      , { token: 'number', foreground: '000000', fontStyle: 'bold' }
+      , { token: 'string', foreground: '000000', fontStyle: '' }
+      , { token: 'comment', foreground: '006600', fontStyle: '' }
+      , { token: 'comment.doc', foreground: '006600', fontStyle: 'bold' }
+      ]
   }
 );
+
+w.editor = monaco.editor.create
+( document.getElementById( "container" )!
+  , { model: w.model
+      , scrollBeyondLastLine: false
+      , roundedSelection: true
+      , lineNumbers: "on"
+      , theme: "casm"
+      // , theme: "vs-dark"
+      //, fontSize: 12
+      //, fontFamily: "font name etc."
+  }
+);
+
+
 
 function createUrl( path: string ): string
 {
@@ -130,6 +179,221 @@ listen
 	        disposable.dispose();
 	    });
 
+
+        var language = <IMonarchLanguage>
+            { defaultToken: 'invalid'
+            , tokenPostfix: '.casm'
+
+            , brackets: [
+                { token: 'delimiter.curly', open: '{', close: '}' },
+                { token: 'delimiter.curly', open: '{|', close: '|}' },
+                { token: 'delimiter.parenthesis', open: '(', close: ')' },
+                { token: 'delimiter.square', open: '[', close: ']' },
+                { token: 'delimiter.angle', open: '<', close: '>' }
+            ]
+
+            , keywords: [
+                'CASM',
+                'init',
+                'function',
+                'initially',
+                'defined',
+                'derived',
+                'enum',
+                'type',
+                'rule',
+                'skip',
+                'let',
+                'in',
+                'case',
+                'of',
+                'default',
+                '_',
+                'if',
+                'then',
+                'else',
+                'par',
+                'endpar',
+                'seq',
+                'endseq',
+                'self',
+                'result',
+                'iterate',
+                'forall',
+                'do',
+                'holds',
+                'exists',
+                'with',
+                'call',
+                'choose',
+            ]
+
+            , constants:
+              [ 'self'
+              , 'undef'
+              , 'false'
+              , 'true'
+              ]
+
+            , builtins:
+              [ 'assert'
+              , 'print'
+              , 'println'
+              , 'asBoolean'
+              , 'asInteger'
+              , 'asBit'
+              , 'asString'
+              , 'asRational'
+              , 'asFloating'
+              , 'dec'
+              , 'hex'
+              , 'bin'
+              , 'oct'
+              ]
+
+            , types:
+              [ 'Void'
+              , 'Boolean'
+              , 'Integer'
+              , 'Bit'
+              , 'String'
+              , 'Floating'
+              , 'Rational'
+              ]
+
+            , functions:
+              [ 'program'
+              ]
+
+            , operators:
+              [ ':='
+              , '>'
+              , '<'
+              , '='
+              , '!='
+              , '<='
+              , '>='
+              , 'not'
+              , 'and'
+              , 'or'
+              , 'xor'
+              , '+'
+              , '-'
+              , '*'
+              , '%'
+              , '/'
+              , '^'
+              , 'inverse'
+              , 'implies'
+              , '..'
+              ]
+
+            // we include these common regular expressions
+            , symbols:  /[=><!~?:&|+\-*\/\^%]+/,
+            escapes:  /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
+            integersuffix: /(ll|LL|u|U|l|L)?(ll|LL|u|U|l|L)?/,
+            floatsuffix: /[fFlL]?/,
+
+            // The main tokenizer for our languages
+            tokenizer: {
+                root: [
+                    // identifiers and keywords
+                    [/[a-zA-Z_]\w*/
+                     , { cases:
+                         { '@keywords': {token:'keyword.$0'}
+                           , '@constants': 'constant'
+                           , '@builtins': 'predefined'
+                           , '@types': 'type'
+                           , '@functions': 'entity'
+                           , '@default': 'identifier'
+                         }
+                       }
+                    ],
+
+                    // whitespace
+                    { include: '@whitespace' },
+
+                    // [[ attributes ]].
+                    [/\[\[.*\]\]/, 'annotation'],
+
+                    // Preprocessor directive
+                    [/^\s*#\w+/, 'keyword'],
+
+                    // delimiters and operators
+                    [/[{}()\[\]]/, '@brackets'],
+                    [/[<>](?!@symbols)/, '@brackets'],
+                    [/@symbols/, { cases: { '@operators': 'delimiter',
+                                            '@default'  : '' } } ],
+
+                    // numbers
+                    [/\d*\d+[eE]([\-+]?\d+)?(@floatsuffix)/, 'number.float'],
+                    [/\d*\.\d+([eE][\-+]?\d+)?(@floatsuffix)/, 'number.float'],
+                    [/0[xX][0-9a-fA-F']*[0-9a-fA-F](@integersuffix)/, 'number.hex'],
+                    [/0[0-7']*[0-7](@integersuffix)/, 'number.octal'],
+                    [/0[bB][0-1']*[0-1](@integersuffix)/, 'number.binary'],
+                    [/\d[\d']*\d(@integersuffix)/, 'number'],
+                    [/\d(@integersuffix)/, 'number'],
+
+                    // delimiter: after number because of .\d floats
+                    [/[;,.]/, 'delimiter'],
+
+                    // strings
+                    [/"([^"\\]|\\.)*$/, 'string.invalid' ],  // non-teminated string
+                    [/"/,  'string', '@string' ],
+
+                    // characters
+                    [/'[^\\']'/, 'string'],
+                    [/(')(@escapes)(')/, ['string','string.escape','string']],
+                    [/'/, 'string.invalid']
+                ],
+
+                whitespace: [
+                    [/[ \t\r\n]+/, ''],
+                    [/\/\*\*(?!\/)/,  'comment.doc', '@doccomment' ],
+                    [/\/\*/,       'comment', '@comment' ],
+                    [/\/\/.*$/,    'comment'],
+                ],
+
+                comment: [
+                    [/[^\/*]+/, 'comment' ],
+                    [/\*\//,    'comment', '@pop'  ],
+                    [/[\/*]/,   'comment' ]
+                ],
+                //Identical copy of comment above, except for the addition of .doc
+                doccomment: [
+                    [/[^\/*]+/, 'comment.doc' ],
+                    [/\*\//,    'comment.doc', '@pop'  ],
+                    [/[\/*]/,   'comment.doc' ]
+                ],
+
+                string: [
+                    [/[^\\"]+/,  'string'],
+                    [/@escapes/, 'string.escape'],
+                    [/\\./,      'string.escape.invalid'],
+                    [/"/,        'string', '@pop' ]
+                ],
+            },
+        };
+
+
+// const syntax = `
+// PPA: add config here
+// `;
+
+        // var def = null;
+        try
+        {
+            // def = eval( "(function(){ return " + syntax + "; })()" );
+            // monaco.languages.setMonarchTokensProvider( 'casm', def );
+            monaco.languages.setMonarchTokensProvider( 'casm', language );
+        }
+        catch (err)
+        {
+            console.error( "could not set CASM language model" );
+            console.error( err );
+            return;
+        }
+
 	    // flag = true;
 
 	    // w.editor.addAction
@@ -170,7 +434,7 @@ function createLanguageClient( connection: MessageConnection ): BaseLanguageClie
       { documentSelector: [ 'casm' ]
         , errorHandler:
         { error: () => ErrorAction.Continue
-          , closed: () => CloseAction.DoNotRestart
+        , closed: () => CloseAction.DoNotRestart
         }
       }
       , services
