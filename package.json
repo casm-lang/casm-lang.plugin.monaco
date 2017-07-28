@@ -16,7 +16,7 @@
 , "typings":                       "./obj/monaco"
 , "devDependencies":
   { "@types/node":                 "^7.0.12"
-  , "@types/ws":                   "0.0.39"
+  , "@types/ws":                   "^0.0.39"
   , "typescript":                  "^2.2.2"
   , "rimraf":                      "^2.6.1"
   , "webpack":                     "^2.3.3"
@@ -24,7 +24,7 @@
   , "copy-webpack-plugin":         "^4.0.1"
   }
 , "dependencies":
-  { "monaco-languageclient":       "0.0.1-alpha.6"
+  { "monaco-languageclient":       "0.1.0"
   , "reconnecting-websocket":      "^3.0.3"
   , "request-light":               "^0.2.0"
   , "vscode-json-languageservice": "^2.0.7"

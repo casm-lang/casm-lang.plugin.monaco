@@ -36,6 +36,11 @@ import
 from 'vscode-ws-jsonrpc';
 
 import
+{ RequestType
+}
+from 'vscode-jsonrpc';
+
+import
 { BaseLanguageClient
 , CloseAction
 , ErrorAction
@@ -107,6 +112,7 @@ monaco.editor.defineTheme
       , { token: 'comment', foreground: '006600', fontStyle: '' }
       , { token: 'comment.doc', foreground: '006600', fontStyle: 'bold' }
       ]
+      , colors: { colorId: "casm" }
   }
 );
 
@@ -396,23 +402,71 @@ listen
 
 	    // flag = true;
 
-	    // w.editor.addAction
-	    // ( { id: 'casmd-version'
-	    //     , label: 'Display version information of casmd'
-	    //     , keybindings: [ monaco.KeyMod.CtrlCmd, monaco.KeyCode.F4 ]
-	    //     , keybindingContext: null
-	    //     , contextMenuGroupId: 'navigation'
-	    //     , contextMenuOrder: 1.5
-	    //     , run: () => {
-	    // 	console.log("CASMd");
-	    // 	if( flag )
-	    // 	{
-	    // 	    webSocket.send( "CASMd" );
-	    // 	}
-	    // 	return null;
-	    //     }
-	    //   }
-	    // );
+	    w.editor.addAction
+	    ( { id: 'casmd-version'
+	      , label: 'casmd: display version information'
+	      , keybindings: [ monaco.KeyMod.CtrlCmd, monaco.KeyCode.F2 ]
+	      , keybindingContext: null
+	      , contextMenuGroupId: 'navigation'
+	      , contextMenuOrder: 1.5
+	      , run: () =>
+            {
+                const params = { 'command' : 'version' };
+                const request = 'workspace/executeCommand';
+                const request_type = new RequestType( request )
+
+                w.client.sendRequest( request_type, params ).then
+                ( ( result : any ) =>
+                  {
+                      console.log( "RESULT F2: " + request )
+                      console.log( params )
+                      console.log( result )
+                  }
+                  , (error : any) =>
+                  {
+                      console.log( "ERROR F2: " + request )
+                      console.log( params )
+                      console.log( error )
+                  }
+                );
+
+	            return null;
+	        }
+	      }
+	    );
+
+	    w.editor.addAction
+	    ( { id: 'casmd-run'
+	      , label: 'casmd: execute the specification'
+	      , keybindings: [ monaco.KeyMod.CtrlCmd, monaco.KeyCode.F4 ]
+	      , keybindingContext: null
+	      , contextMenuGroupId: 'navigation'
+	      , contextMenuOrder: 1.5
+	      , run: () =>
+            {
+                const params = { 'command' : 'run' };
+                const request = 'workspace/executeCommand';
+                const request_type = new RequestType( request )
+
+                w.client.sendRequest( request_type, params ).then
+                ( ( result : any ) =>
+                  {
+                      console.log( "RESULT F4: " + request )
+                      console.log( params )
+                      console.log( result )
+                  }
+                  , (error : any) =>
+                  {
+                      console.log( "ERROR F4: " + request )
+                      console.log( params )
+                      console.log( error )
+                  }
+                );
+
+	            return null;
+	        }
+	      }
+	    );
 
 	    // webSocket.addEventListener('message', function(e: any) { // : void => {
 	    //     // flags.binary will be set if a binary data is received.
@@ -428,7 +482,7 @@ const services = createMonacoServices();
 
 function createLanguageClient( connection: MessageConnection ): BaseLanguageClient
 {
-    return new BaseLanguageClient
+    w.client = new BaseLanguageClient
     ( { name: "casm-lang.plugin.monaco"
       , clientOptions:
       { documentSelector: [ 'casm' ]
@@ -452,6 +506,8 @@ function createLanguageClient( connection: MessageConnection ): BaseLanguageClie
         }
       }
     );
+
+    return w.client;
 }
 
 //
