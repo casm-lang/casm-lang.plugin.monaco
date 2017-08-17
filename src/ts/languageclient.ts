@@ -100,20 +100,39 @@ w.model = monaco.editor.createModel
 monaco.editor.defineTheme
 ( 'casm'
   , { base: 'vs'
-      , inherit: true
-      , rules:
-      [ { token: 'keyword', foreground: '0033ff', fontStyle: 'bold' }
-      , { token: 'type', foreground: 'aa0000', fontStyle: '' }
-      , { token: 'predefined', foreground: '9900ff', fontStyle: '' }
-      , { token: 'operators', foreground: '000000', fontStyle: 'bold' }
-      , { token: 'constant', foreground: '0099ff', fontStyle: 'bold' }
-      , { token: 'number', foreground: '000000', fontStyle: 'bold' }
-      , { token: 'string', foreground: '000000', fontStyle: '' }
-      , { token: 'comment', foreground: '006600', fontStyle: '' }
-      , { token: 'comment.doc', foreground: '006600', fontStyle: 'bold' }
+    , inherit: true
+    , rules:
+      [ { token: 'keyword'    , foreground: '0033ff', fontStyle: 'bold' }
+      , { token: 'type'       , foreground: 'aa0000', fontStyle: ''     }
+      , { token: 'predefined' , foreground: '9900ff', fontStyle: ''     }
+      , { token: 'operators'  , foreground: '000000', fontStyle: 'bold' }
+      , { token: 'constant'   , foreground: '0099ff', fontStyle: 'bold' }
+      , { token: 'number'     , foreground: '000000', fontStyle: 'bold' }
+      , { token: 'string'     , foreground: '009900', fontStyle: ''     }
+      , { token: 'comment'    , foreground: '660000', fontStyle: ''     }
+      , { token: 'comment.doc', foreground: '660000', fontStyle: 'bold' }
       ]
-      , colors: { colorId: "casm" }
-  }
+    , colors: { colorId: "casm" }
+    }
+);
+
+monaco.editor.defineTheme
+( 'casm-dark'
+  , { base: 'vs-dark'
+    , inherit: true
+    , rules:
+      [ { token: 'keyword'    , foreground: '33ccff', fontStyle: 'bold' }
+      , { token: 'type'       , foreground: 'ffbb33', fontStyle: ''     }
+      , { token: 'predefined' , foreground: 'ff33bb', fontStyle: ''     }
+      , { token: 'operators'  , foreground: 'ffffff', fontStyle: 'bold' }
+      , { token: 'constant'   , foreground: '33ffaa', fontStyle: 'bold' }
+      , { token: 'number'     , foreground: 'ffffff', fontStyle: 'bold' }
+      , { token: 'string'     , foreground: '2ff244', fontStyle: ''     }
+      , { token: 'comment'    , foreground: 'bb2222', fontStyle: ''     }
+      , { token: 'comment.doc', foreground: 'bb2222', fontStyle: 'bold' }
+      ]
+    , colors: { colorId: "casm-dark" }
+    }
 );
 
 w.editor = monaco.editor.create
@@ -122,7 +141,7 @@ w.editor = monaco.editor.create
       , scrollBeyondLastLine: false
       , roundedSelection: true
       , lineNumbers: "on"
-      , theme: "casm"
+      , theme: "casm-dark"
       // , theme: "vs-dark"
       //, fontSize: 12
       //, fontFamily: "font name etc."
