@@ -34,6 +34,9 @@
   , "ws":                          "^2.2.3"
   , "express":                     "^4.15.2"
   , "command-line-args":           "^4.0.5"
+  , "viz.js":                      "^1.8.0"
+  , "jquery":                      "^3.2.1"
+  , "bootstrap":                   "^3.3.7"
   }
 , "scripts":
   { "compile":                     "./node_modules/.bin/tsc"

@@ -79,7 +79,9 @@ if( args.standalone )
 
     var httpServer = Express();
     httpServer.use( '/', Express.static( __dirname + '/http' ) );
-    httpServer.use( '/public', Express.static( __dirname + '/../obj' ) );
+    httpServer.use( '/_nodejs', Express.static( __dirname + '/../obj' ) );
+    httpServer.use( '/_public', Express.static( __dirname + '/../node_modules' ) );
+    httpServer.use( '/_source', Express.static( __dirname + '/../src' ) );
     httpServer.listen( httpPort );
     console.log( 'casmd.js: serving content on http://localhost:' + httpPort );
 }

@@ -37,21 +37,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <script type="text/javascript" src="_public/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="_public/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="_public/bootstrap/dist/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="_source/css/bootstrap-callout.css">
     <title>casm-lang.plugin.monaco</title>
   </head>
   <body>
-    <div id="container" style="width: 100%; height: 460px; border: none;">
-      <script src="public/min/vs/loader.js"></script>
-      <script>
+    <div id="casm-lang-plugin-monaco">
+      <div id="casm-lang-plugin-monaco-editor" style="width: 100%; height: 480px; border: none;">
+	<script src="_nodejs/min/vs/loader.js"></script>
+	<script>
 	require.config
 	( { paths:
-	    { 'vs': 'public/min/vs'
+	    { 'vs': '_nodejs/min/vs'
 	    }
 	  }
 	);
-	window.casmd = { standalone: true };
-      </script>
-      <script src="public/casm-lang.plugin.monaco.min.js"></script>
+	window.casmd =
+	{ standalone: true
+	};
+	</script>
+	<script src="_nodejs/casm-lang.plugin.monaco.min.js"></script>
+      </div>
     </div>
   </body>
 </html>

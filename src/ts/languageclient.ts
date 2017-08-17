@@ -29,6 +29,8 @@
 //  Licensed under the MIT License. See License.txt in the project root for license information.
 //
 
+var w = <any>window;
+
 import
 { listen
 , MessageConnection
@@ -51,7 +53,10 @@ from 'monaco-languageclient';
 
 import IMonarchLanguage = monaco.languages.IMonarchLanguage;
 
+
 const ReconnectingWebSocket = require( 'reconnecting-websocket' );
+// const GraphViz = require( 'viz.js/viz-lite' );
+const jQuery = require( 'jquery' );
 
 const value = `
 // Hello World Example Specification
@@ -87,7 +92,13 @@ monaco.languages.register
   }
 );
 
-var w = <any>window;
+
+jQuery( "#casm-lang-plugin-monaco" ).append( '<div id="casm-lang-plugin-monaco-result"></div>' );
+
+
+// const result = GraphViz( "digraph { a -> b; }" );
+// jQuery( "#casm-lang-plugin-monaco" ).append( "<div>" + result + "</div>" );
+
 
 w.model = monaco.editor.createModel
 ( value
@@ -136,7 +147,7 @@ monaco.editor.defineTheme
 );
 
 w.editor = monaco.editor.create
-( document.getElementById( "container" )!
+( document.getElementById( "casm-lang-plugin-monaco-editor" )!
   , { model: w.model
       , scrollBeyondLastLine: false
       , roundedSelection: true
@@ -225,6 +236,11 @@ listen
                 'defined',
                 'derived',
                 'enum',
+                'structure',
+                'feature',
+                'implements',
+                'for',
+                'this',
                 'type',
                 'rule',
                 'skip',
@@ -473,6 +489,21 @@ listen
                       console.log( "RESULT F4: " + request )
                       console.log( params )
                       console.log( result )
+
+                      const currentDateTime = new Date().toLocaleString( 'en-GB' );
+
+                      jQuery( '.casm-lang-plugin-monaco-result-message' ).removeClass( 'bs-callout-primary' );
+
+                      jQuery( "#casm-lang-plugin-monaco-result" ).prepend
+                      ( '<div title="'
+                        + currentDateTime
+                        + '" class="casm-lang-plugin-monaco-result-message bs-wrap bs-callout bs-callout-primary">'
+                        + '<h4>' + currentDateTime + '</h4>'
+                        + '<pre>'
+                        + result
+                        + '</pre>'
+                        + '</div>'
+                      );
                   }
                   , (error : any) =>
                   {
@@ -487,6 +518,24 @@ listen
 	      }
 	    );
 
+	    // w.editor.addAction
+	    // ( { id: 'casmd-TEST'
+	    //   , label: 'casmd: TEST'
+	    //   , keybindings: [ monaco.KeyMod.CtrlCmd, monaco.KeyCode.F6 ]
+	    //   , keybindingContext: null
+	    //   , contextMenuGroupId: 'navigation'
+	    //   , contextMenuOrder: 1.5
+	    //   , run: () =>
+        //     {
+        //         console.log( w.editor.setModelMarkers )
+        //
+	    //         return null;
+	    //     }
+	    //   }
+	    // );
+
+
+
 	    // webSocket.addEventListener('message', function(e: any) { // : void => {
 	    //     // flags.binary will be set if a binary data is received.
 	    //     // flags.masked will be set if the data was masked.
@@ -496,6 +545,17 @@ listen
 	    // });
     }
 });
+
+// // w.editor._setModelMarkers = w.editor.setModelMarkers;
+// w.editor.setModelMarkers = function( model : any, owner : any, markers : any )
+// {
+//     // w.editor._setModelMarkers( w.editor, model, owner, markers );
+//
+//     console.log( model );
+//     console.log( owner );
+//     console.log( markers );
+// }
+
 
 const services = createMonacoServices();
 
