@@ -115,10 +115,11 @@ monaco.editor.defineTheme
     , rules:
       [ { token: 'keyword'    , foreground: '0033ff', fontStyle: 'bold' }
       , { token: 'type'       , foreground: 'aa0000', fontStyle: ''     }
+      , { token: 'entity'     , foreground: '000000', fontStyle: 'bold' }
       , { token: 'predefined' , foreground: '9900ff', fontStyle: ''     }
-      , { token: 'operators'  , foreground: '000000', fontStyle: 'bold' }
-      , { token: 'constant'   , foreground: '0099ff', fontStyle: 'bold' }
-      , { token: 'number'     , foreground: '000000', fontStyle: 'bold' }
+      , { token: 'operators'  , foreground: '000000', fontStyle: ''     }
+      , { token: 'constant'   , foreground: '0099ff', fontStyle: ''     }
+      , { token: 'number'     , foreground: '000000', fontStyle: ''     }
       , { token: 'string'     , foreground: '009900', fontStyle: ''     }
       , { token: 'comment'    , foreground: '660000', fontStyle: ''     }
       , { token: 'comment.doc', foreground: '660000', fontStyle: 'bold' }
@@ -134,10 +135,11 @@ monaco.editor.defineTheme
     , rules:
       [ { token: 'keyword'    , foreground: '33ccff', fontStyle: 'bold' }
       , { token: 'type'       , foreground: 'ffbb33', fontStyle: ''     }
+      , { token: 'entity'     , foreground: 'ffffff', fontStyle: 'bold' }
       , { token: 'predefined' , foreground: 'ff33bb', fontStyle: ''     }
-      , { token: 'operators'  , foreground: 'ffffff', fontStyle: 'bold' }
-      , { token: 'constant'   , foreground: '33ffaa', fontStyle: 'bold' }
-      , { token: 'number'     , foreground: 'ffffff', fontStyle: 'bold' }
+      , { token: 'operators'  , foreground: 'ffffff', fontStyle: ''     }
+      , { token: 'constant'   , foreground: '33ffaa', fontStyle: ''     }
+      , { token: 'number'     , foreground: 'ffffff', fontStyle: ''     }
       , { token: 'string'     , foreground: '2ff244', fontStyle: ''     }
       , { token: 'comment'    , foreground: 'bb2222', fontStyle: ''     }
       , { token: 'comment.doc', foreground: 'bb2222', fontStyle: 'bold' }
@@ -154,8 +156,8 @@ w.editor = monaco.editor.create
       , lineNumbers: "on"
       , theme: "casm-dark"
       // , theme: "vs-dark"
-      //, fontSize: 12
-      //, fontFamily: "font name etc."
+      , fontSize: 12
+      , fontFamily: "Andale Mono"
   }
 );
 
@@ -235,7 +237,7 @@ listen
                 'initially',
                 'defined',
                 'derived',
-                'enum',
+                'enumeration',
                 'structure',
                 'feature',
                 'implements',
@@ -298,7 +300,7 @@ listen
               , 'Integer'
               , 'Bit'
               , 'String'
-              , 'Floating'
+              , 'Decimal'
               , 'Rational'
               ]
 
