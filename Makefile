@@ -1,9 +1,9 @@
 #
-#   Copyright (c) 2017 CASM Organization
+#   Copyright (C) 2016-2018 CASM Organization <https://casm-lang.org>
 #   All rights reserved.
 #
 #   Developed by: Philipp Paulweber
-#                 https://github.com/casm-lang/casm-lang.plugin.monaco
+#                 <https://github.com/casm-lang/casm-lang.plugin.monaco>
 #
 #   This file is part of casm-lang.plugin.monaco.
 #
@@ -20,10 +20,8 @@
 #   You should have received a copy of the GNU General Public License
 #   along with casm-lang.plugin.monaco. If not, see <http://www.gnu.org/licenses/>.
 #
-#
 #   Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
 #   Licensed under the MIT License. See License.txt in the project root for license information.
-#
 #
 #   Copyright (c) Microsoft Corporation. All rights reserved.
 #   Licensed under the MIT License. See License.txt in the project root for license information.
