@@ -220,54 +220,69 @@ listen
             { defaultToken: 'invalid'
             , tokenPostfix: '.casm'
 
-            , brackets: [
-                { token: 'delimiter.curly', open: '{', close: '}' },
-                { token: 'delimiter.curly', open: '{|', close: '|}' },
-                { token: 'delimiter.parenthesis', open: '(', close: ')' },
-                { token: 'delimiter.square', open: '[', close: ']' },
-                { token: 'delimiter.angle', open: '<', close: '>' }
-            ]
+            , brackets:
+              [ { token: 'delimiter.curly'
+                , open:  '{'
+                , close: '}'
+                }
+              , { token: 'delimiter.curly'
+                , open: '{|'
+                , close: '|}'
+                }
+              , { token: 'delimiter.parenthesis'
+                , open: '('
+                , close: ')'
+                }
+              , { token: 'delimiter.square'
+                , open: '['
+                , close: ']'
+                }
+              , { token: 'delimiter.angle'
+                , open: '<'
+                , close: '>'
+                }
+              ]
 
-            , keywords: [
-                'CASM',
-                'init',
-                'function',
-                'initially',
-                'defined',
-                'derived',
-                'enumeration',
-                'structure',
-                'feature',
-                'implements',
-                'for',
-                'this',
-                'type',
-                'rule',
-                'skip',
-                'let',
-                'in',
-                'case',
-                'of',
-                'default',
-                '_',
-                'if',
-                'then',
-                'else',
-                'par',
-                'endpar',
-                'seq',
-                'endseq',
-                'self',
-                'result',
-                'iterate',
-                'forall',
-                'do',
-                'holds',
-                'exists',
-                'with',
-                'call',
-                'choose',
-            ]
+            , keywords:
+              [ 'CASM'
+              , 'init'
+              , 'function'
+              , 'initially'
+              , 'defined'
+              , 'derived'
+              , 'enumeration'
+              , 'using'
+              , 'structure'
+              , 'feature'
+              , 'implements'
+              , 'for'
+              , 'this'
+              , 'type'
+              , 'rule'
+              , 'skip'
+              , 'let'
+              , 'in'
+              , 'case'
+              , 'of'
+              , 'default'
+              , '_'
+              , 'if'
+              , 'then'
+              , 'else'
+              , 'par'
+              , 'endpar'
+              , 'seq'
+              , 'endseq'
+              , 'self'
+              , 'iterate'
+              , 'forall'
+              , 'do'
+              , 'holds'
+              , 'exists'
+              , 'with'
+              , 'call'
+              , 'choose'
+              ]
 
             , constants:
               [ 'self'
@@ -295,15 +310,19 @@ listen
             , types:
               [ 'Void'
               , 'Boolean'
+              , 'Binary'
               , 'Integer'
-              , 'Bit'
-              , 'String'
               , 'Decimal'
               , 'Rational'
+              , 'String'
+              , 'Range'
+              , 'Tuple'
+              , 'List'
               ]
 
             , functions:
               [ 'program'
+              , 'result'
               ]
 
             , operators:
@@ -327,35 +346,35 @@ listen
               , 'inverse'
               , 'implies'
               , '..'
+              , 'as'
               ]
 
             // we include these common regular expressions
-            , symbols:  /[=><!~?:&|+\-*\/\^%]+/,
-            escapes:  /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
-            integersuffix: /(ll|LL|u|U|l|L)?(ll|LL|u|U|l|L)?/,
-            floatsuffix: /[fFlL]?/,
+            , symbols: /[=><!~?:&|+\-*\/\^%]+/
+            , escapes: /\\(?:[abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/
+            , integersuffix: /(ll|LL|u|U|l|L)?(ll|LL|u|U|l|L)?/
+            , floatsuffix: /[fFlL]?/
 
             // The main tokenizer for our languages
-            tokenizer: {
-                root: [
-                    // identifiers and keywords
-                    [/[a-zA-Z_]\w*/
-                     , { cases:
-                         { '@keywords': {token:'keyword.$0'}
-                           , '@constants': 'constant'
-                           , '@builtins': 'predefined'
-                           , '@types': 'type'
-                           , '@functions': 'entity'
-                           , '@default': 'identifier'
-                         }
-                       }
-                    ],
-
-                    // whitespace
-                    { include: '@whitespace' },
+            , tokenizer:
+              { root:
+                [ // identifiers and keywords
+                  [ /[a-zA-Z_]\w*/
+                  , { cases:
+                      { '@keywords': {token:'keyword.$0'}
+                      , '@constants': 'constant'
+                      , '@builtins': 'predefined'
+                      , '@types': 'type'
+                      , '@functions': 'entity'
+                      , '@default': 'identifier'
+                      }
+                    }
+                  ]
+                , // whitespace
+                  { include: '@whitespace' }
 
                     // [[ attributes ]].
-                    [/\[\[.*\]\]/, 'annotation'],
+                  , [/\[\[.*\]\]/, 'annotation'],
 
                     // Preprocessor directive
                     [/^\s*#\w+/, 'keyword'],
