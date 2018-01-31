@@ -20,18 +20,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with casm-lang.plugin.monaco. If not, see <http://www.gnu.org/licenses/>.
 //
+//  Based on https://github.com/TypeFox/monaco-languageclient Project:
 //  Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
 //  Licensed under the MIT License. See License.txt in the project root for license information.
 //
+//  Based on https://github.com/Microsoft/monaco-editor-samples Project:
 //  Copyright (c) Microsoft Corporation. All rights reserved.
 //  Licensed under the MIT License. See License.txt in the project root for license information.
 //
 
 var WebSocket = require('ws').Server;
-var UdpSocket = require('dgram');
-var UdpBuffer = require('buffer').Buffer;
 var Process = require('child_process').spawn;
-
 var Args = require('command-line-args')
 
 const argsDefinition =
@@ -84,48 +83,37 @@ if( args.standalone )
     console.log( 'casmd.js: serving content on http://localhost:' + httpPort );
 }
 
-function LanguageServer( port )
+function LanguageServer()
 {
     this.name = 'casmd';
-    this.args = [ 'lsp', '--udp4', localhost + ':' + port ];
-    this.port = port;
-    this.process = null;
-
-    console.log( "languageServer(" + this.port + "): start '" + this.name + " " + this.args.join(' ') + "'" );
-
+    this.args = [ 'lsp', '--stdio' ];
     this.process = Process( this.name, this.args );
+    this.pid = this.process.pid
 
-    this.process.stdout.setEncoding( 'utf8' );
-    this.process.stdout.on
-    ( 'data', function( data )
-      {
-	  var str = data.toString()
-	  var lines = str.split( /(\r?\n)/g );
-	  console.log( lines.join('') );
-      }
-    );
+    console.log( "~~~ ~~~ LSP(" + this.pid + "): start '" + this.name + " " + this.args.join(' ') + "'" );
 
     this.process.stderr.setEncoding( 'utf8' );
     this.process.stderr.on
     ( 'data', function( data )
       {
-	  var str = data.toString()
-	  var lines = str.split( /(\r?\n)/g );
-	  console.log( lines.join('') );
+	      var str = data.toString()
+	      var lines = str.split( /(\r?\n)/g );
+	      console.log( lines.join('') );
       }
     );
 
     this.process.on
     ( 'close', function( code )
       {
-	  console.log( "languageServer(" + this.port + "): close" );
+	      console.log( '~~~ ~~~ LSP(' + this.pid + '): exit: ' + code );
       }
     );
 
     this.process.on
-    ( 'error', function()
+    ( 'error'
+    , function( error )
       {
-	  console.log( "languageServer(" + this.port + "): error" );
+	      console.log( '~~~ ~~~ LSP(' + this.pid + '): error: ' + error );
       }
     );
 }
@@ -136,92 +124,59 @@ LanguageServer.prototype.stop = function()
     this.process.kill( 'SIGINT' );
 }
 
-var cnt = -1;
 
-function setupConnection( webSock, udpSock, udpPort, udpHost )
-{
-    cnt++;
-
-    console.log( '' );
-    console.log( 'WSS <=> UDP: connection #' + cnt );
-    console.log( '             wss://' + localhost + ':' + wssPort );
-    console.log( '             udp://' + localhost + ':' + udpPort );
-
-    var casmd = new LanguageServer( udpPort );
-
-    webSock.on
-    ( 'message', function( message )
-      {
-	  console.log( 'WSS --> UDP: ' + message.length );
-          var packet = new UdpBuffer( message );
-          udpSock.send( packet, 0, packet.length, udpPort, udpHost );
-      }
-    );
-
-    webSock.on
-    ( 'error', function( error )
-      {
-	  console.log( 'WSS ~~~ ~~~: error: ' + error )
-	  casmd.stop();
-      }
-    );
-
-    webSock.on
-    ( 'close', function()
-      {
-	  console.log( 'WSS ~~~ ~~~: disconnected' )
-	  casmd.stop();
-      }
-    );
-
-    udpSock.on
-    ( 'message', function( message, flags )
-      {
-	  console.log( 'WSS <-- UDP: ' + message.length );
-          webSock.send( message.toString() );
-      }
-    );
-
-    udpSock.on
-    ( 'error', function( error )
-      {
-	  console.log( '~~~ ~~~ UDP: error: ' + error )
-      }
-    );
-
-    udpSock.on
-    ( 'close', function()
-      {
-	  console.log( '~~~ ~~~ UDP: disconnected' )
-	  casmd.stop();
-      }
-    );
-}
-
-var webSock = new WebSocket
+var webSocket = new WebSocket
 ( { port: wssPort
   }
 );
 
-webSock.on
-( 'connection', function( webSock )
+webSocket.on
+( 'connection'
+, function( webSocket )
   {
-      var udpSock = UdpSocket.createSocket( 'udp4' );
-      var udpInfo = UdpSocket.createSocket( 'udp4' );
-      udpInfo.bind()
+      var casmd = new LanguageServer();
 
-      udpInfo.on
-      ( 'listening', function()
-	    {
-	        var udpPort = udpInfo.address().port;
-	        var udpHost = localhost;
-	        udpInfo.close
-	        ( function()
-	          {
-		          setupConnection( webSock, udpSock, udpPort, udpHost );
-	          }
-	        );
-	    }
+      console.log( '' );
+      console.log( 'WSS <=> LSP(' + casmd.pid + '): wss://' + localhost + ':' + wssPort );
+
+      casmd.process.stdin.setEncoding( 'utf8' );
+
+      casmd.process.stdout.setEncoding( 'utf8' );
+      casmd.process.stdout.on
+      ( 'data'
+      , function( data )
+        {
+	        var message = data.toString()
+	        console.log( 'WSS <-- LSP(' + casmd.pid + '): ' + message.length + '\n' + message );
+            webSocket.send( message.toString() + '\r\n' );
+        }
+      );
+
+      webSocket.on
+      ( 'message'
+      , function( message )
+        {
+	        console.log( 'WSS --> LSP(' + casmd.pid + '): ' + message.length + '\n' + message );
+            casmd.process.stdin.write( message + '\r\n' );
+        }
+      );
+
+      webSocket.on
+      ( 'close'
+      , function()
+        {
+	        console.log( 'WSS ~~~ ~~~: disconnected' )
+            casmd.stop();
+        }
+      );
+
+      webSocket.on
+      ( 'error'
+      , function( error )
+        {
+	        console.log( 'WSS ~~~ ~~~: error: ' + error )
+            casmd.stop();
+        }
       );
   }
 );
