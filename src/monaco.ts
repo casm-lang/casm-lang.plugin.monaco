@@ -20,9 +20,11 @@
 //  You should have received a copy of the GNU General Public License
 //  along with casm-lang.plugin.monaco. If not, see <http://www.gnu.org/licenses/>.
 //
+//  Based on https://github.com/TypeFox/monaco-languageclient Project:
 //  Copyright (c) 2017 TypeFox GmbH (http://www.typefox.io). All rights reserved.
 //  Licensed under the MIT License. See License.txt in the project root for license information.
 //
+//  Based on https://github.com/Microsoft/monaco-editor-samples Project:
 //  Copyright (c) Microsoft Corporation. All rights reserved.
 //  Licensed under the MIT License. See License.txt in the project root for license information.
 //
