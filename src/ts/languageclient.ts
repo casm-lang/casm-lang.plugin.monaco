@@ -197,7 +197,7 @@ function createWebSocket( url: string ): WebSocket
 }
 
 
-const url = createUrl( '/casmd' );
+const url = createUrl( '/_casmd' );
 
 const webSocket = createWebSocket( url );
 
