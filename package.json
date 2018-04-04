@@ -16,26 +16,26 @@
   "main": "./obj/monaco.js",
   "typings": "./obj/monaco",
   "devDependencies": {
-    "@types/node": "^7.0.52",
+    "@types/node": "^7.0.56",
     "@types/ws": "^0.0.39",
-    "copy-webpack-plugin": "^4.3.1",
+    "copy-webpack-plugin": "^4.5.1",
     "rimraf": "^2.6.1",
-    "typescript": "^2.6.2",
+    "typescript": "^2.7.2",
     "webpack": "^2.3.3",
     "webpack-uglify-js-plugin": "^1.1.9"
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
     "command-line-args": "^4.0.5",
-    "express": "^4.15.2",
+    "express": "^4.16.3",
     "jquery": "^3.3.1",
     "monaco-languageclient": "^0.1.0",
     "reconnecting-websocket": "^3.0.3",
     "request-light": "^0.2.2",
-    "viz.js": "^1.8.0",
+    "viz.js": "^1.8.1",
     "vscode-json-languageservice": "^2.0.7",
-    "vscode-languageserver": "^3.5.0",
-    "vscode-uri": "^1.0.0",
+    "vscode-languageserver": "^3.5.1",
+    "vscode-uri": "^1.0.3",
     "vscode-ws-jsonrpc": "^0.0.1-alpha.3",
     "ws": "^2.2.3"
   },
@@ -45,6 +45,7 @@
     "clean": "./node_modules/.bin/rimraf ./obj",
     "clean-all": "npm run clean && ./node_modules/.bin/rimraf ./node_modules",
     "server": "node src/casmd.js",
-    "standalone": "node src/casmd.js -S"
+    "standalone": "node src/casmd.js -S",
+    "standalone-memcheck": "valgrind --leak-check=full node --expose_gc src/casmd.js -S -m"
   }
 }
