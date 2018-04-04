@@ -49,6 +49,11 @@ const argsDefinition =
   , type:         Number
   , defaultValue: 8010
   }
+, { name:         'memcheck'
+  , alias:        'm'
+  , type:         Boolean
+  , defaultValue: false
+  }
 ];
 
 var options = null;
@@ -85,8 +90,17 @@ if( args.standalone )
 
 function LanguageServer()
 {
-    this.name = 'casmd';
-    this.args = [ 'lsp', '--stdio' ];
+    if( args.memcheck )
+    {
+        this.name = 'valgrind';
+        this.args = [ '--leak-check=full', '-v', 'casmd', 'lsp', '--stdio' ];
+    }
+    else
+    {
+        this.name = 'casmd';
+        this.args = [ 'lsp', '--stdio' ];
+    }
+
     this.process = Process( this.name, this.args );
     this.pid = this.process.pid
 
