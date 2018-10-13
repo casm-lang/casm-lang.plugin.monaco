@@ -2,7 +2,7 @@
   "name": "casm-lang.plugin.monaco",
   "displayName": "casmd-monaco",
   "description": "CASM Language Server Protocol Client Extension for Monaco Editor",
-  "author": "CASM Organisation (https://casm-lang.org)",
+  "author": "CASM Organization (https://casm-lang.org)",
   "publisher": "Unpublished",
   "version": "0.0.1",
   "license": "GPL-3.0+",
