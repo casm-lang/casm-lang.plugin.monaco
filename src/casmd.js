@@ -162,7 +162,7 @@ webSocket.on
         {
 	        var message = data.toString()
 	        console.log( 'WSS <-- LSP(' + casmd.pid + '): ' + message.length + '\n' + message );
-            webSocket.send( message.toString() + '\r\n' );
+            webSocket.send( message.toString() );
         }
       );
 
@@ -171,7 +171,7 @@ webSocket.on
       , function( message )
         {
 	        console.log( 'WSS --> LSP(' + casmd.pid + '): ' + message.length + '\n' + message );
-            casmd.process.stdin.write( message + '\r\n' );
+            casmd.process.stdin.write( message );
         }
       );
 
