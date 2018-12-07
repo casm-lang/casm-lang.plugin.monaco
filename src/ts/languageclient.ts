@@ -254,9 +254,10 @@ listen
               , 'derived'
               , 'enumeration'
               , 'using'
+              , 'invariant'
               , 'structure'
               , 'feature'
-              , 'implements'
+              , 'implement'
               , 'for'
               , 'this'
               , 'type'
@@ -288,6 +289,7 @@ listen
 
             , constants:
               [ 'self'
+              , 'this'
               , 'undef'
               , 'false'
               , 'true'
@@ -297,20 +299,11 @@ listen
               [ 'assert'
               , 'print'
               , 'println'
-              , 'asBoolean'
-              , 'asInteger'
-              , 'asBit'
-              , 'asString'
-              , 'asRational'
-              , 'asFloating'
-              , 'dec'
-              , 'hex'
-              , 'bin'
-              , 'oct'
               ]
 
             , types:
               [ 'Void'
+              , 'Object'
               , 'Boolean'
               , 'Binary'
               , 'Integer'
