@@ -4,7 +4,7 @@
   "description": "CASM Language Server Protocol Client Extension for Monaco Editor",
   "author": "CASM Organization (https://casm-lang.org)",
   "publisher": "Unpublished",
-  "version": "0.2.0",
+  "version": "0.4.0",
   "license": "GPL-3.0+",
   "repository": {
     "type": "git",
