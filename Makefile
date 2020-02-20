@@ -29,12 +29,12 @@
 #   Licensed under the MIT License. See License.txt in the project root for license information.
 #
 
-NPM = npm run
+NPM = yarn run
 
 default: install compile build
 
 install:
-	npm $@
+	yarn
 
 compile:
 	$(NPM) $@
