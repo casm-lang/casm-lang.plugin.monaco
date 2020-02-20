@@ -53,6 +53,7 @@ module.exports =
   { extensions: ['.js']
   , alias:
     { 'vs': path.resolve( buildRoot, monacoEditorPath )
+      , 'vscode': path.resolve( 'node_modules/monaco-languageclient/lib/vscode-compatibility' )
     }
   }
 , devtool: 'source-map'

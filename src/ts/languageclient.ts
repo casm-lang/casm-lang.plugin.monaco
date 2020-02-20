@@ -43,10 +43,10 @@ import
 from 'vscode-jsonrpc';
 
 import
-{ BaseLanguageClient
+{ MonacoLanguageClient
+, MonacoServices
 , CloseAction
 , ErrorAction
-, createMonacoServices
 , createConnection
 }
 from 'monaco-languageclient';
@@ -571,11 +571,13 @@ listen
 // }
 
 
-const services = createMonacoServices();
+// const services = createMonacoServices();
+MonacoServices.install( w.editor );
 
-function createLanguageClient( connection: MessageConnection ): BaseLanguageClient
+
+function createLanguageClient( connection: MessageConnection ): MonacoLanguageClient
 {
-    w.client = new BaseLanguageClient
+    w.client = new MonacoLanguageClient
     ( { name: "casm-lang.plugin.monaco"
       , clientOptions:
       { documentSelector: [ 'casm' ]
@@ -584,7 +586,7 @@ function createLanguageClient( connection: MessageConnection ): BaseLanguageClie
         , closed: () => CloseAction.DoNotRestart
         }
       }
-      , services
+//      , services
       , connectionProvider:
         { get: (errorHandler, closeHandler) =>
           {
