@@ -250,13 +250,14 @@ listen
               , 'init'
               , 'function'
               , 'initially'
+              , 'symbolic'
               , 'defined'
               , 'derived'
               , 'enumeration'
               , 'using'
               , 'invariant'
               , 'structure'
-              , 'feature'
+              , 'behavior'
               , 'implement'
               , 'for'
               , 'this'
@@ -522,6 +523,54 @@ listen
                   , (error : any) =>
                   {
                       console.log( "ERROR F4: " + request )
+                      console.log( params )
+                      console.log( error )
+                  }
+                );
+
+	            return null;
+	        }
+	      }
+	    );
+
+	    w.editor.addAction
+	    ( { id: 'casmd-trace'
+	      , label: 'casmd: generate TPTP trace'
+	      , keybindings: [ monaco.KeyMod.CtrlCmd, monaco.KeyCode.F3 ]
+	      , keybindingContext: null
+	      , contextMenuGroupId: 'navigation'
+	      , contextMenuOrder: 1.5
+	      , run: () =>
+            {
+                const params = { 'command' : 'trace' };
+                const request = 'workspace/executeCommand';
+                const request_type = new RequestType( request )
+
+                w.client.sendRequest( request_type, params ).then
+                ( ( result : any ) =>
+                  {
+                      console.log( "RESULT F3: " + request )
+                      console.log( params )
+                      console.log( result )
+
+                      const currentDateTime = new Date().toLocaleString( 'en-GB' );
+
+                      jQuery( '.casm-lang-plugin-monaco-result-message' ).removeClass( 'bs-callout-primary' );
+
+                      jQuery( "#casm-lang-plugin-monaco-result" ).prepend
+                      ( '<div title="'
+                        + currentDateTime
+                        + '" class="casm-lang-plugin-monaco-result-message bs-wrap bs-callout bs-callout-primary">'
+                        + '<h4>' + currentDateTime + '</h4>'
+                        + '<pre>'
+                        + result
+                        + '</pre>'
+                        + '</div>'
+                      );
+                  }
+                  , (error : any) =>
+                  {
+                      console.log( "ERROR F3: " + request )
                       console.log( params )
                       console.log( error )
                   }
