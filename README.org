@@ -28,6 +28,16 @@
 #   Copyright (c) Microsoft Corporation. All rights reserved.
 #   Licensed under the MIT License. See License.txt in the project root for license information.
 # 
+
+#+begin_html
+<h4>
+⚠️
+This repository has been archived and its development work moved to the
+<a href="https://github.com/sealangdotorg/sea">SEA language</a> project.
+<hr>
+</h4>
+#+end_html
+
 [[https://github.com/casm-lang/casm-lang.logo/raw/master/etc/headline.png]]
 
 * casm-lang.plugin.monaco
