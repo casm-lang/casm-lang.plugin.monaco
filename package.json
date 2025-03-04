@@ -28,7 +28,7 @@
     "bootstrap": "^3.4.1",
     "command-line-args": "^4.0.5",
     "express": "^4.16.4",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "lodash": "^4.17.13",
     "monaco-languageclient": "^0.1.0",
     "randomatic": "^3.0.0",
